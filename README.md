@@ -1,4 +1,4 @@
-# todolist 的 vue 简单实现
+# todolist 的 vue 简单实现（使用 vuex）
 
 ## 安装
 
@@ -9,7 +9,7 @@ npm install
 ### 开发环境
 
 ```
-npm run serve
+npm start
 ```
 
 ### 环境

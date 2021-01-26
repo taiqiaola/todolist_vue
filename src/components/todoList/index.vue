@@ -1,6 +1,6 @@
 <template>
   <div class="todoListBox">
-    <div class="boxTitle">TodoList By Vue</div>
+    <div class="boxTitle">TodoList by Vue use Vuex</div>
     <div class="boxContent">
       <div class="inputBox">
         <a-input v-model:value="inputValue" v-on:keyup.enter="onAddList" placeholder="enter some info..." />
@@ -58,9 +58,10 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations } from "vuex";
 import { Button, Input, Radio, Checkbox, Empty, Row, Col, message } from "ant-design-vue";
 import { PlusOutlined } from "@ant-design/icons-vue";
-import PreList from "../preList";
+import PreList from "./preList";
 import "./index.less";
 
 export default {
@@ -69,12 +70,6 @@ export default {
     return {
       inputValue: "",
       type: "all",
-      listKey: 4,
-      allData: [
-        { key: 1, value: "这是一条待处理数据", isTodo: true },
-        { key: 2, value: "这是一条已处理数据", isTodo: false },
-        { key: 3, value: "这是另一条待处理数据", isTodo: true },
-      ],
       checkAll: false,
       checkedList: [],
     };
@@ -92,7 +87,12 @@ export default {
     PlusOutlined,
     PreList,
   },
+  computed: {
+    ...mapState("todoList", ["allData", "listKey"]),
+    ...mapGetters("todoList", ["todoData", "todoCount"]),
+  },
   methods: {
+    ...mapMutations("todoList", ["increaseListKey", "updateAllData"]),
     noListText() {
       let txt = "";
       if (this.type === "todo") {
@@ -128,13 +128,22 @@ export default {
           isTodo: true,
         },
       ];
-      this.allData = this.allData.concat(addData);
-      this.listKey = this.listKey + 1;
+      const newAllData = this.allData.concat(addData);
+      this.updateAllData({
+        data: newAllData,
+      });
+
+      this.increaseListKey(); //让listKey增加1
+
       this.inputValue = "";
+
       message.success("新增成功");
     },
     onDeleteItem(key) {
-      this.allData = this.allData.filter((i) => i.key !== key);
+      const newAllData = this.allData.filter((i) => i.key !== key);
+      this.updateAllData({
+        data: newAllData,
+      });
     },
     onHandleTypeChange(e) {
       this.type = e.target.value;
@@ -151,7 +160,7 @@ export default {
       });
     },
     onDeal(bol) {
-      const newData = this.allData
+      const newAllData = this.allData
         .filter((i) => i)
         .map((i) => {
           if (this.checkedList.indexOf(i.key) > -1) {
@@ -163,7 +172,9 @@ export default {
             return i;
           }
         });
-      this.allData = newData;
+      this.updateAllData({
+        data: newAllData,
+      });
       this.checkedList = [];
       this.checkAll = false;
     },
