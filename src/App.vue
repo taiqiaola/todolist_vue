@@ -1,14 +1,14 @@
 <template>
   <a-config-provider :locale="zh_CN">
     <div class="appBox">
-      <TodoList />
+      <router-view></router-view>
     </div>
   </a-config-provider>
 </template>
 
 <script>
-import { ConfigProvider } from "ant-design-vue";
-import { TodoList } from "./components";
+import { RouterView } from "vue-router";
+import { ConfigProvider, message } from "ant-design-vue";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
 import moment from "moment";
 import "moment/locale/zh-cn";
@@ -16,6 +16,10 @@ import "./common/css/global.less";
 import "./App.less";
 
 moment.locale("zh-cn");
+
+message.config({
+  maxCount: 1,
+});
 
 export default {
   name: "app",
@@ -26,7 +30,7 @@ export default {
   },
   components: {
     "a-config-provider": ConfigProvider,
-    TodoList,
+    "router-view": RouterView,
   },
 };
 </script>

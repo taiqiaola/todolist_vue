@@ -60,7 +60,7 @@
 <script>
 import { Button, Input, Radio, Checkbox, Empty, Row, Col, message } from "ant-design-vue";
 import { PlusOutlined } from "@ant-design/icons-vue";
-import PreList from "../preList";
+import { PreList } from "./components";
 import "./index.less";
 
 export default {
